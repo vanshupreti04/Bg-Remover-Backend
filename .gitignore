@@ -33,7 +33,7 @@ build/
 .vscode/
 
 # Configuration files with secrets
-application-local.properties
+application.properties
 application.properties.backup
 *.local.properties
 
