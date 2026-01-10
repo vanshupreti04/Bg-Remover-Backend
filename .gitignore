@@ -32,11 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-# Configuration files with secrets
-application.properties
-application.properties.backup
-*.local.properties
-
 # Environment files
 .env
 .env.local
