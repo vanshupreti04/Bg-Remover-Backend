@@ -20,35 +20,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO saveUser(UserDTO userDTO) {
-        System.out.println("=== USER SERVICE DEBUG ===");
-        System.out.println("Received userDTO photoUrl: " + userDTO.getPhotoUrl());
-        System.out.println("Received userDTO photoUrl is null? " + (userDTO.getPhotoUrl() == null));
-        System.out.println("Received userDTO photoUrl is empty? " + (userDTO.getPhotoUrl() != null && userDTO.getPhotoUrl().isEmpty()));
 
         Optional<UserEntity> optionalUser = userRepository.findByClerkId(userDTO.getClerkId());
 
         if(optionalUser.isPresent()){
-            System.out.println("Found existing user, updating...");
             UserEntity existingUser = optionalUser.get();
-            System.out.println("Old photoUrl in DB: " + existingUser.getPhotoUrl());
 
             existingUser.setEmail(userDTO.getEmail());
             existingUser.setFirstName(userDTO.getFirstName());
             existingUser.setLastName(userDTO.getLastName());
-            existingUser.setPhotoUrl(userDTO.getPhotoUrl()); // ✅ This sets it
+            existingUser.setPhotoUrl(userDTO.getPhotoUrl());
 
             if(userDTO.getCredits() != null){
                 existingUser.setCredits(userDTO.getCredits());
             }
             existingUser = userRepository.save(existingUser);
-            System.out.println("Saved photoUrl: " + existingUser.getPhotoUrl());
             return mapToDTO(existingUser);
         }
 
-        System.out.println("Creating new user...");
         UserEntity newUser = mapToEntity(userDTO);
         userRepository.save(newUser);
-        System.out.println("New user photoUrl: " + newUser.getPhotoUrl());
 
         return mapToDTO(newUser);
     }
@@ -62,33 +53,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteByClerkId(String clerkId) {
-        System.out.println("=== DELETE USER BY CLERK ID ===");
-        System.out.println("Looking for user with clerkId: '" + clerkId + "'");
 
         try {
             Optional<UserEntity> userOptional = userRepository.findByClerkId(clerkId);
 
             if (userOptional.isPresent()) {
                 UserEntity userEntity = userOptional.get();
-                System.out.println("Found user to delete:");
-                System.out.println("- ID: " + userEntity.getId());
-                System.out.println("- Email: " + userEntity.getEmail());
-                System.out.println("- Clerk ID: " + userEntity.getClerkId());
-
                 userRepository.delete(userEntity);
-                System.out.println("✅ User deleted from database");
 
-                // Verify
                 boolean stillExists = userRepository.existsByClerkId(clerkId);
-                System.out.println("Verification - User still exists? " + stillExists);
             } else {
-                System.out.println("⚠️ User not found with clerkId: '" + clerkId + "'");
                 throw new UsernameNotFoundException("User not found with clerkId: " + clerkId);
             }
 
         } catch (Exception e) {
-            System.out.println("❌ Error in deleteByClerkId: " + e.getMessage());
-            throw e; // Re-throw to be caught in controller
+            throw e;
         }
     }
 
@@ -98,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 .email(userDTO.getEmail())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
-                .photoUrl(userDTO.getPhotoUrl()) // ✅ This sets it
+                .photoUrl(userDTO.getPhotoUrl())
                 .build();
     }
 
@@ -109,7 +88,7 @@ public class UserServiceImpl implements UserService {
                 .email(newUser.getEmail())
                 .firstName(newUser.getFirstName())
                 .lastName(newUser.getLastName())
-                .photoUrl(newUser.getPhotoUrl()) // ✅ ADD THIS LINE
+                .photoUrl(newUser.getPhotoUrl())
                 .build();
     }
 }

@@ -20,9 +20,9 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
 
     private static final Map<String, PlanDetails> PLAN_DETAILS = Map.of(
-            "basic", new PlanDetails("Basic", 50, 99),
-            "premium", new PlanDetails("Premium", 150, 249),
-            "ultimate", new PlanDetails("Ultimate", 400, 499)
+            "basic", new PlanDetails("Basic", 10, 99),
+            "premium", new PlanDetails("Premium", 40, 299),
+            "ultimate", new PlanDetails("Ultimate", 100, 699)
 
     );
 

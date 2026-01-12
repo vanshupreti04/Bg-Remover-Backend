@@ -32,7 +32,7 @@ public class UserEntity {
     @PrePersist
     public void prePersist(){
         if(credits == null){
-            credits = 2;
+            credits = 1;
         }
     }
 }

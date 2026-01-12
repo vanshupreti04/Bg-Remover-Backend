@@ -21,21 +21,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> createOrUpdateUser(@RequestBody UserDTO userDTO, Authentication authentication){
-        System.out.println("=== SPRING BOOT DEBUG ===");
-        System.out.println("Received request to /api/users");
-        System.out.println("UserDTO: " + userDTO);
-        System.out.println("Authentication: " + authentication);
-        System.out.println("Authentication name: " + (authentication != null ? authentication.getName() : "null"));
 
         RemoveBgResponse response = null;
         try{
-            // Log the check
-            System.out.println("Checking if authentication.getName() equals userDTO.getClerkId()");
-            System.out.println("auth.getName(): " + (authentication != null ? authentication.getName() : "null"));
-            System.out.println("userDTO.getClerkId(): " + userDTO.getClerkId());
 
             if(!authentication.getName().equals(userDTO.getClerkId())){
-                System.out.println("❌ Permission denied: Clerk IDs don't match");
                 response = RemoveBgResponse.builder()
                         .success(false)
                         .data("User does not have permission")
@@ -44,18 +34,16 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
             }
 
-            System.out.println("✅ Clerk IDs match, saving user...");
             UserDTO user = userService.saveUser(userDTO);
             response = RemoveBgResponse.builder()
                     .success(true)
                     .data(user)
                     .statusCode(HttpStatus.OK)
                     .build();
-            System.out.println("✅ User saved successfully");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         catch(Exception exception){
-            System.out.println("❌ Exception occurred: " + exception.getMessage());
+
             exception.printStackTrace();
             response = RemoveBgResponse.builder()
                     .success(false)
